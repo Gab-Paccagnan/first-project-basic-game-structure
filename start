@@ -1,0 +1,91 @@
+class Environment:
+
+  def __init__(self, name, warriors, mythology, num_warriors, level_myth):
+    self.name = name
+    self.warriors = warriors
+    self.mythology = mythology
+    self.num_warriors = num_warriors
+    self.level_myth = level_myth
+    self.warrior_skills = num_warriors * level_myth
+    self.is_destroyed =  False
+
+  def __repr__(self):
+    return "{name}. your warriors are {warriors}, you trust {mythology}. Beware, you can only attack once".format(name = self.name, warriors = self.warriors, mythology = self.mythology)
+
+  def destroyed(self):
+    if self.num_warriors == 0:
+      print("{name} was knocked out!".format(name = self.name))
+      self.is_destroyed = True
+    
+  def evolve(self):
+    if self.level_myth >= 5:
+      self.warrior_skills *= 2
+    return self.warrior_skills
+    print("Mythology reached level 5, your war skills just doubled!")
+
+  def attack(self, other_human):
+    if self.warrior_skills < other_human.warrior_skills:
+      self.destroyed()
+    elif self.warrior_skills == other_human.warrior_skills:
+      print("It's a draw!")
+    else:
+      print("You won!")
+
+class Human:
+
+  def __init__(self, name, environment, resources):
+    self.name = name
+    self.environment = environment
+    self.resources = resources
+
+  def __repr__(self):
+    return "{name} is ready to play! These are your info: {environment}. You have {resources} resources. Use 2 Resources to grow your army or raise your mythology levels. Your mythology level times your warriors number will decide victory. Level 5 mythology level will double your war skills. Beware, you can only attack once".format(name = self.name, environment = self.environment, resources = 10)
+
+  def build(self):
+    self.resources -= 2
+    self.num_warriors += 3
+    self.current_turn += 1
+    print("+3 warriors")
+    return self.num_warriors
+
+  def think(self):
+    self.resources -= 2
+    self.level_myth += 1
+    self.current_turn += 1
+    return self.level_myth
+    print("+1 mythology")
+
+  def attack_other(self, other_human):
+    my_warriors = self.num_warriors
+    their_warriors = other_human.num_warriors
+    my_warriors.attack(their_warriors.environment)
+
+a = Environment("Mediterranean Senate", "Gladiators", "Divine Anthropomorphism", 3, 2)
+b = Environment("Tao Mandate", "Shaolin Monks", "64 Hexagrams", 3, 2)
+
+human_one_name = input("Welcome to Planet Earth. Please enter a name for player one and hit enter. ")
+human_two_name = input("Hi, " + str(human_one_name) + "! Welcome! Let's find you an opponent. Enter a name for the second player. ")
+
+choice = input("Hi, " + human_two_name + "! Let's pick our Environment! " + human_one_name + ", would you like the Mediterranean Senate, or the Tao Mandate? " + human_two_name + " will get the other one. Type either 'Mediterranean Senate' or 'Tao Mandate'. ")
+
+while choice != 'Mediterranean Senate' and choice != 'Tao Mandate':
+  choice = input("Whoops, it looks like you didn't choose 'Mediterranean Senate' or 'Tao Mandate'. Try selecting one again! ")
+
+human_one_environment = []
+human_two_environment = []
+
+if choice == 'Mediterranean Senate':
+  human_one_environment.append(a)
+  human_two_environment.append(b)
+
+else:
+  human_two_environment.append(b)
+  human_two_environment.append(a)
+
+human_one = Human(human_one_name, human_one_environment, 10)
+human_two = Human(human_two_name, human_two_environment, 10)
+
+print("Let's play!")
+
+print(human_one)
+print(human_two)  
